@@ -45,6 +45,11 @@ namespace PointOfSale.DTO
         public string CultureName { get; set; }
 
         /// <summary>
+        ///
+        /// </summary>
+        public string CoinName { get; set; }
+
+        /// <summary>
         /// Array with the configured currencies
         /// </summary>
         public Stack<decimal> Currencies { get; set; }

@@ -42,7 +42,7 @@ namespace PointOfSale
         /// <returns>
         ///     IReturnCode<Dictionary<decimal, int>> : Key to the dictionary is the bill/coin and the value is the number of bills calculated
         /// </returns>
-        public IReturnCode<Dictionary<decimal, int>> CalculateChange(decimal price, decimal pay)
+        internal IReturnCode<Dictionary<decimal, int>> CalculateChange(decimal price, decimal pay)
         {
             try
             {
@@ -52,8 +52,8 @@ namespace PointOfSale
                 {
                     return new ReturnCode<Dictionary<decimal, int>>(evaluation);
                 }
-
-                Dictionary<decimal, int> currentChange = new Dictionary<decimal, int>(); // structure to save the number of bills
+                // structure to save the number of bills
+                Dictionary<decimal, int> currentChange = new Dictionary<decimal, int>();
                 decimal change = pay - price; // quantity to give back
                 int numberOfBills = 0; // number of bills of each denomination
 
@@ -106,7 +106,7 @@ namespace PointOfSale
             try
             {
                 if (price > pay)
-                    return new ReturnCodeBase("The payment is not enough to cover the product price");
+                    return new ReturnCodeBase("The payment is not enough to cover the price of the product");
 
                 if (price == pay)
                     return new ReturnCodeBase("The payment provided cannot be equals to the price of the product");

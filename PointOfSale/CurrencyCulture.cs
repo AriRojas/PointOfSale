@@ -12,7 +12,7 @@ namespace PointOfSale
     /// <remarks>
     /// Creation. 6/06/21. Ariadna Rojas.
     /// </remarks>
-    // TODO: create methods to set up a new configuration
+    // TODO: create methods to set up a new configuration, always store bills in ascending order
     internal class CurrencyCulture
     {
         #region Constants
@@ -39,7 +39,12 @@ namespace PointOfSale
         /// <summary>
         /// Private property to set the file configuration
         /// </summary>
-        private CurrencyConfig CurrencyConfig { get; set; }
+        private CurrencyConfig currencyConfig { get; set; }
+
+        /// <summary>
+        /// Public property to get the file configuration
+        /// </summary>
+        public CurrencyConfig CurrencyConfig { get { return currencyConfig; } }
 
         #endregion Properties
 
@@ -50,7 +55,7 @@ namespace PointOfSale
         /// </summary>
         public CurrencyCulture()
         {
-            CurrencyConfig = new CurrencyConfig();
+            currencyConfig = new CurrencyConfig();
             currentCulture = new Culture();
         }
 
@@ -79,6 +84,22 @@ namespace PointOfSale
             }
         }
 
+        /// <summary>
+        /// Find currency by coin name
+        /// </summary>
+        /// <param name="coinName">Coin name as it's in the JSON file</param>
+        internal void FindCurrencyByCoinName(string coinName)
+        {
+            try
+            {
+                currentCulture = CurrencyConfig.Cultures.Find(c => c.CoinName.Equals(coinName));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         #endregion Public Methods
 
         #region Private Methods
@@ -94,7 +115,7 @@ namespace PointOfSale
                 string pathToConfigFile = Path.Combine(appPath, CONFIG_FILE_NAME);
                 using (StreamReader reader = new StreamReader(pathToConfigFile))
                 {
-                    CurrencyConfig = JsonConvert.DeserializeObject<CurrencyConfig>(reader.ReadToEnd());
+                    currencyConfig = JsonConvert.DeserializeObject<CurrencyConfig>(reader.ReadToEnd());
                 }
             }
             catch (Exception)
