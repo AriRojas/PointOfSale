@@ -1,5 +1,5 @@
 # Important!
-Place the file from the relative path ~\DTO\CurrencyConfig.json into the same folder as the PointOfSale.exe, this could be (~\bin\Debug\ or ~\bin\Release\ or any other folder where the .exe may be)
+Place the file from the relative path \DTO\CurrencyConfig.json into the same folder as the PointOfSale.exe, this could be (\bin\Debug\ or \bin\Release\ or any other folder where the .exe may be)
 This should definitely be improved but for now this is the way it'll work
 # PointOfSale
 
