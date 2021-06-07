@@ -1,6 +1,6 @@
 # Important!
-Place the file from the relative path ~\DTO\CurrencyConfig.json into the ~\bin\Debug\ folder
-This should be improved but for now this is the way it'll work
+Place the file from the relative path ~\DTO\CurrencyConfig.json into the same folder as the PointOfSale.exe, this could be (~\bin\Debug\ or ~\bin\Release\ or any other folder where the .exe may be)
+This should definitely be improved but for now this is the way it'll work
 # PointOfSale
 
 You are a software consultant for CASH Masters, a company that sells point-of-sale (POS) electronic cash registers.  CASH Masters would like to rewrite their POS system from scratch and has the requirement below that they’d like you to implement. Provide a complete working solution of how you would implement this. Pay attention to all function and non-function requirements and treat this as if you were coding as a member of the CASH Master team.
