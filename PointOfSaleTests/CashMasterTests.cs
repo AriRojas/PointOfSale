@@ -1,8 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PointOfSale;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace PointOfSale.Tests
 {
@@ -10,10 +7,16 @@ namespace PointOfSale.Tests
     public class CashMasterTests
     {
         [TestMethod()]
-        public void CalculateChangeEmptyStackTest()
+        public void CalculateChangeTest()
         {
             // emptyStack
             CashMaster master = new CashMaster(new Stack<decimal>());
+
+            Assert.IsNotNull(master.CalculateChange(0, new Dictionary<decimal, int>()));
+
+            Assert.IsNotNull(master.CalculateChange(0, null));
+
+            Assert.IsNotNull(master.CalculateChange(-1000000000000, null));
         }
     }
 }

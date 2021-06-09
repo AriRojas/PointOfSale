@@ -13,7 +13,7 @@ namespace PointOfSale
     /// Creation. 6/06/21. Ariadna Rojas.
     /// </remarks>
     // TODO: create methods to set up a new configuration, always store bills in ascending order
-    internal class CurrencyCulture
+    public class CurrencyCulture
     {
         #region Constants
 
@@ -34,7 +34,7 @@ namespace PointOfSale
         /// <summary>
         /// Public property to get the value of the culture retrieved from the file
         /// </summary>
-        public Culture CurrentCulture { get { return currentCulture; } }
+        public Culture Current { get { return currentCulture; } }
 
         /// <summary>
         /// Private property to set the file configuration

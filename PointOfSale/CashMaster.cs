@@ -79,7 +79,7 @@ namespace PointOfSale
                 } while (change > 0);
 
                 if (change == 0)
-                    return new ReturnCode<Dictionary<decimal, int>>("Operation Successfull", true, currentChange);
+                    return new ReturnCode<Dictionary<decimal, int>>(currentChange);
                 else
                     return new ReturnCode<Dictionary<decimal, int>>("The configured bills cannot give an exact change for the purchased product.", true, currentChange);
             }
@@ -111,6 +111,8 @@ namespace PointOfSale
         {
             try
             {
+                if (pay == null) return new ReturnCode<decimal>("Invalid Data");
+
                 // Summation of all the bills submitted with actual value, bill * value
                 decimal totalPayment = pay.Sum(b => b.Key * b.Value);
                 if (price > totalPayment)

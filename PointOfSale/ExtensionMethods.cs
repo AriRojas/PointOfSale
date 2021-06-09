@@ -83,15 +83,15 @@ namespace PointOfSale
         }
 
         /// <summary>
-        /// Clones a stack.
+        /// Clones an instance of IEnumerable.
         /// </summary>
-        /// <typeparam name="T">Type of the elements of the stack</typeparam>
-        /// <param name="stack">Stack to clone</param>
-        /// <returns>A new Stack of type T with the same values</returns>
-        internal static Stack<T> Clone<T>(this Stack<T> stack)
+        /// <typeparam name="T">Type of the elements of the collection</typeparam>
+        /// <param name="collection">Collection to clone</param>
+        /// <returns>A new Collection of type T with the same values</returns>
+        internal static IEnumerable<T> Clone<T>(this IEnumerable<T> collection)
         {
-            Contract.Requires(stack != null);
-            return new Stack<T>(new Stack<T>(stack));
+            Contract.Requires(collection != null);
+            return new Stack<T>(new Stack<T>(collection));
         }
     }
 }
