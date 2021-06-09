@@ -7,7 +7,7 @@
     /// <remarks>
     /// Creation. 6/06/21. Ariadna Rojas.
     /// </remarks>
-    internal interface IReturnCode<T> : IReturnCodeBase
+    public interface IReturnCode<T> : IReturnCodeBase
     {
         T Result { get; set; }
     }

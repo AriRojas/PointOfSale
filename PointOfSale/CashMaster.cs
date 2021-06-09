@@ -1,6 +1,7 @@
 ﻿using PointOfSale.DTO.ErrorHandling;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PointOfSale
 {
@@ -8,7 +9,7 @@ namespace PointOfSale
     /// Contains the logic to calculate the change to give back.
     /// Creation. 6/06/21. Ariadna Rojas.
     /// </summary>
-    internal class CashMaster
+    public class CashMaster : IDisposable
     {
         #region Properties
 
@@ -25,7 +26,7 @@ namespace PointOfSale
         /// Default constructor
         /// </summary>
         /// <param name="currencyStack">Stack with the values of the bills to use</param>
-        internal CashMaster(Stack<decimal> currencyStack)
+        public CashMaster(Stack<decimal> currencyStack)
         {
             this.currencyStack = currencyStack;
         }
@@ -42,19 +43,19 @@ namespace PointOfSale
         /// <returns>
         ///     IReturnCode<Dictionary<decimal, int>> : Key to the dictionary is the bill/coin and the value is the number of bills calculated
         /// </returns>
-        internal IReturnCode<Dictionary<decimal, int>> CalculateChange(decimal price, decimal pay)
+        public IReturnCode<Dictionary<decimal, int>> CalculateChange(decimal price, Dictionary<decimal, int> pay)
         {
             try
             {
                 // First validate the amounts are valid according to the rules
-                IReturnCodeBase evaluation = ValidateAmounts(price, pay);
+                IReturnCode<decimal> evaluation = ValidateAmounts(price, pay);
                 if (!evaluation.Success)
                 {
                     return new ReturnCode<Dictionary<decimal, int>>(evaluation);
                 }
                 // structure to save the number of bills
                 Dictionary<decimal, int> currentChange = new Dictionary<decimal, int>();
-                decimal change = pay - price; // quantity to give back
+                decimal change = evaluation.Result - price; // the result of the evaluation gives the total amount payed
                 int numberOfBills = 0; // number of bills of each denomination
 
                 // take the first (bigger) bill available
@@ -84,9 +85,14 @@ namespace PointOfSale
             }
             catch (Exception ex)
             {
-                ex.SaveException();
+                ex.SaveExceptionAsync();
                 throw;
             }
+        }
+
+        public void Dispose()
+        {
+            currencyStack.GetEnumerator().Dispose();
         }
 
         #endregion Public Methods
@@ -101,17 +107,19 @@ namespace PointOfSale
         /// <param name="price">Price of the item purchased</param>
         /// <param name="pay">Amount payed for the product</param>
         /// <returns></returns>
-        private IReturnCodeBase ValidateAmounts(decimal price, decimal pay)
+        private IReturnCode<decimal> ValidateAmounts(decimal price, Dictionary<decimal, int> pay)
         {
             try
             {
-                if (price > pay)
-                    return new ReturnCodeBase("The payment is not enough to cover the price of the product");
+                // Summation of all the bills submitted with actual value, bill * value
+                decimal totalPayment = pay.Sum(b => b.Key * b.Value);
+                if (price > totalPayment)
+                    return new ReturnCode<decimal>("The payment is not enough to cover the price of the product", false, totalPayment);
 
-                if (price == pay)
-                    return new ReturnCodeBase("The payment provided cannot be equals to the price of the product");
+                if (price == totalPayment)
+                    return new ReturnCode<decimal>("The payment provided cannot be an optimal amount of bills to cover the price", false, totalPayment);
 
-                return new ReturnCodeBase(true);
+                return new ReturnCode<decimal>(totalPayment);
             }
             catch (Exception)
             {

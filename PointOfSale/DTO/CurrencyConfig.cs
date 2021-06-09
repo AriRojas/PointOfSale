@@ -8,7 +8,7 @@ namespace PointOfSale.DTO
     /// <remarks>
     /// Creation 6/06/21. Ariadna Rojas.
     /// </remarks>
-    internal class CurrencyConfig
+    public class CurrencyConfig
     {
         #region Properties
 

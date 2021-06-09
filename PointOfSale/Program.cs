@@ -77,17 +77,41 @@ namespace PointOfSale
             }
         }
 
+        private static Dictionary<decimal, int> InputBills(CurrencyCulture currency)
+        {
+            try
+            {
+                decimal[] elements = currency.CurrentCulture.Currencies.ToArray();
+                decimal element;
+                string inputValue;
+                Dictionary<decimal, int> keyValuePairs = new Dictionary<decimal, int>();
+                for (int i = 0; i < elements.Length; i++)
+                {
+                    element = elements[i];
+                    Console.Write($"Number of {element} bills: ");
+                    inputValue = Console.ReadLine();
+                    Console.WriteLine();
+
+                    keyValuePairs.Add(element, Convert.ToInt32(inputValue));
+                }
+                return keyValuePairs;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         /// <summary>
         /// Main execution
         /// </summary>
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
-            decimal price = 0;
-            decimal pay = 0;
+            decimal price;
             CurrencyCulture currency;
-            bool? continueExecution = false;
-            string answerContinue = string.Empty;
+            bool? continueExecution;
+            string answerContinue;
             CashMaster cashMaster;
             try
             {
@@ -96,20 +120,23 @@ namespace PointOfSale
                 Console.WriteLine("*************************************************");
                 currency = ChooseCurrency();
                 Console.WriteLine("*************************************************");
+                IReturnCode<Dictionary<decimal, int>> returnCodeOperation;
+                Dictionary<decimal, int> paymentBills;
                 do
                 {
                     Console.WriteLine("Enter price of purchase: ");
                     price = InputDecimal();
 
                     Console.WriteLine("Enter payment amount: ");
-                    pay = InputDecimal();
+                    //pay = InputDecimal();
+                    paymentBills = InputBills(currency);
 
                     cashMaster = new CashMaster(currency.CurrentCulture.Currencies.Clone());
-                    // TODO: run tasks asynchronously and allow more than one run
+                    // TODO: run tasks asynchronously
                     Console.WriteLine("*************************************************");
                     Console.WriteLine("Calculating...");
                     Console.WriteLine("*************************************************");
-                    IReturnCode<Dictionary<decimal, int>> returnCodeOperation = cashMaster.CalculateChange(price, pay);
+                    returnCodeOperation = cashMaster.CalculateChange(price, paymentBills);
                     Console.WriteLine(returnCodeOperation.Message);
                     if (returnCodeOperation.Success)
                     {
@@ -133,7 +160,8 @@ namespace PointOfSale
             }
             catch (Exception ex)
             {
-                // TODO: add logic to handle exceptions in the last layer
+                ex.SaveExceptionAsync();
+                Console.WriteLine("An unexpected error has ocurred in the system. Contact your system administrator.");
             }
         }
     }

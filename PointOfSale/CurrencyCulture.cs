@@ -79,7 +79,7 @@ namespace PointOfSale
             }
             catch (Exception ex)
             {
-                ex.SaveException();
+                ex.SaveExceptionAsync();
                 throw;
             }
         }

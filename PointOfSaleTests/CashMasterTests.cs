@@ -10,9 +10,10 @@ namespace PointOfSale.Tests
     public class CashMasterTests
     {
         [TestMethod()]
-        public void CalculateChangeTest()
+        public void CalculateChangeEmptyStackTest()
         {
-            Assert.Fail();
+            // emptyStack
+            CashMaster master = new CashMaster(new Stack<decimal>());
         }
     }
 }

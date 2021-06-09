@@ -1,20 +1,55 @@
 ﻿using PointOfSale.DTO;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PointOfSale
 {
     /// <summary>
-    ///
+    /// Extension methods class
     /// </summary>
+    /// <remarks>
+    /// Creation 7.06.21. Ariadna Rojas.
+    /// </remarks>
     internal static class ExtensionMethods
     {
-        internal static void SaveException(this Exception ex)
+        /// <summary>
+        /// Saves the information about a given exception.
+        /// </summary>
+        /// <param name="ex">Exception object</param>
+        internal async static void SaveExceptionAsync(this Exception ex)
         {
-            //TODO: add logic to save information about the exception
+            try
+            {
+                //TODO: ideally this should save more information and do it in a more visible path/tool/dashboard
+                StringBuilder messageLog = new StringBuilder();
+                messageLog.AppendLine(ex.GetExceptionMessageLog());
+                messageLog.AppendLine(ex.InnerException.GetExceptionMessageLog());
+                string fileName = string.Concat(GlobalConstants.LOG_FILE_NAME, DateTime.Now.Millisecond.ToString());
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    await writer.WriteAsync(messageLog.ToString());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Concatenates the relevant information about an exception object.
+        /// </summary>
+        /// <param name="ex">Exception object</param>
+        /// <returns>String message log</returns>
+        internal static string GetExceptionMessageLog(this Exception ex)
+        {
+            return string.Concat($"Message: {ex?.Message}", Environment.NewLine,
+                $"StackTrace: {ex?.StackTrace}", Environment.NewLine,
+                $"Source: {ex?.Source} - HR Result: {ex?.HResult}", Environment.NewLine);
         }
 
         /// <summary>
@@ -47,6 +82,12 @@ namespace PointOfSale
             return regex.IsMatch(currency);
         }
 
+        /// <summary>
+        /// Clones a stack.
+        /// </summary>
+        /// <typeparam name="T">Type of the elements of the stack</typeparam>
+        /// <param name="stack">Stack to clone</param>
+        /// <returns>A new Stack of type T with the same values</returns>
         internal static Stack<T> Clone<T>(this Stack<T> stack)
         {
             Contract.Requires(stack != null);

@@ -6,7 +6,7 @@
     /// <remarks>
     /// Creation. 6.06.21. Ariadna Rojas
     /// </remarks>
-    internal interface IReturnCodeBase
+    public interface IReturnCodeBase
     {
         string Message { get; set; }
         bool Success { get; set; }

@@ -63,6 +63,17 @@
             Result = result;
         }
 
+        /// <summary>
+        /// Constructor with result object.
+        /// Message and Success flag are successfull by default.
+        /// </summary>
+        /// <param name="result">Result Object</param>
+        public ReturnCode(T result)
+            : this("Successfull Operation", true)
+        {
+            Result = result;
+        }
+
         #endregion Constructors
     }
 }
